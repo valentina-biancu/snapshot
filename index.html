@@ -58,7 +58,7 @@
       transition: background 0.2s, color 0.2s;
     }
 
-    /* Toolbar (screen only) */
+    /* Toolbar (screen only) - desktop base */
     .toolbar {
       position: sticky;
       top: 0;
@@ -67,9 +67,18 @@
       border-bottom: 1px solid var(--border-line);
       padding: 0.5rem 1rem;
       display: flex;
-      justify-content: flex-end;
+      justify-content: flex-start;  /* changed from flex-end to left-align brand */
+      align-items: center;
       gap: 1rem;
       box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    }
+    .toolbar-brand {
+      font-weight: 700;
+      font-size: 1rem;
+      color: var(--brand-teal);
+      letter-spacing: 0.02em;
+      margin-right: auto;           /* pushes buttons to the right */
+      white-space: nowrap;
     }
     .toolbar button, .toolbar a {
       background: var(--soft-bg);
@@ -82,6 +91,7 @@
       color: var(--text-primary);
       text-decoration: none;
       transition: 0.2s;
+      white-space: nowrap;
     }
     .toolbar button:hover, .toolbar a:hover {
       background: var(--soft-bg-2);
@@ -345,6 +355,7 @@
       font-size: 9pt;
       color: var(--text-primary);
       text-align: center;
+      white-space: nowrap;
     }
     .page-number { right: 16mm; }
     .footer-mark { left: 16mm; }
@@ -384,6 +395,144 @@
     .line.tight {
       height: 5.2mm;
       margin-bottom: 1.4mm;
+    }
+
+    /* ---------- MOBILE-ONLY STYLES ---------- */
+    .hamburger-btn {
+      display: none;
+    }
+
+    @media (max-width: 768px) {
+      /* --- Toolbar: hamburger layout --- */
+      .toolbar {
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.5rem 0.75rem;
+        flex-wrap: nowrap;
+        position: relative;
+      }
+      .toolbar-brand {
+        margin-right: 0;
+      }
+      /* Hide all toolbar items by default on mobile */
+      .toolbar-items {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 100%;
+        right: 0;
+        left: 0;
+        background: var(--bg-page);
+        border-bottom: 1px solid var(--border-line);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        padding: 0.5rem 0.75rem 0.75rem;
+        gap: 0.5rem;
+        z-index: 200;
+      }
+      .toolbar-items.open {
+        display: flex;
+      }
+      .toolbar-items button,
+      .toolbar-items a {
+        width: 100%;
+        text-align: left;
+        justify-content: flex-start;
+        border-radius: 8px;
+        padding: 0.55rem 1rem;
+        font-size: 0.85rem;
+      }
+
+      /* Show hamburger button on mobile */
+      .hamburger-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--soft-bg);
+        border: 1px solid var(--border-line);
+        border-radius: 8px;
+        padding: 0.45rem 0.65rem;
+        cursor: pointer;
+        font-size: 1rem;
+        color: var(--text-primary);
+        line-height: 1;
+        transition: 0.2s;
+        flex-shrink: 0;
+      }
+      .hamburger-btn:hover {
+        background: var(--soft-bg-2);
+      }
+
+      /* --- Page: full-width, no fixed mm sizing --- */
+      .page {
+        width: 100%;
+        min-height: unset;
+        margin: 0 0 6px 0;
+        padding: 6vw 5vw 14vw;
+        box-shadow: none;
+        border-radius: 0;
+      }
+
+      /* --- Typography scale-down --- */
+      h1 { font-size: 20pt; }
+      h2 { font-size: 16pt; }
+      h3 { font-size: 11pt; }
+      .lede { font-size: 10.5pt; max-width: 100%; }
+      .subtitle { font-size: 10.5pt; }
+      .eyebrow { font-size: 9pt; }
+
+      /* --- All 2-column grids → single column --- */
+      .grid-2,
+      .snapshot-grid,
+      .two-col-questions {
+        grid-template-columns: 1fr;
+        max-width: 100%;
+      }
+
+      /* --- Constrain wide boxes --- */
+      .box,
+      .anchor-box,
+      .next-action,
+      .cta-box,
+      .flow-bridge {
+        max-width: 100%;
+        width: 100%;
+      }
+
+      /* --- Flow bridge pills: wrap nicely --- */
+      .flow-mini {
+        gap: 2mm;
+      }
+      .flow-pill {
+        font-size: 9pt;
+        padding: 1.5mm 3mm;
+      }
+
+      /* --- Footer positioning: relative on mobile to avoid overlap --- */
+      .footer-mark,
+      .page-number {
+        position: relative;
+        bottom: unset;
+        left: unset;
+        right: unset;
+        display: inline-block;
+        margin-top: 6vw;
+      }
+      .footer-mark {
+        margin-right: 1rem;
+      }
+
+      /* --- Top rule spacing --- */
+      .top-rule {
+        margin: 0 0 5vw 0;
+      }
+
+      /* --- Lines: slightly taller for easier finger-writing on print --- */
+      .line {
+        height: 7mm;
+      }
+      .line.tight {
+        height: 6mm;
+      }
     }
 
     /* PRINT – force black text except h1 and top rule, white backgrounds */
@@ -439,12 +588,18 @@
 </head>
 <body>
 <div class="toolbar">
-  <button onclick="window.print()"><i class="fas fa-print"></i> Print / Save as PDF</button>
-  <a href="snapshot.pdf" download style="background: var(--soft-bg); border: 1px solid var(--border-line); border-radius: 30px; padding: 0.4rem 1rem; text-decoration: none; color: var(--text-primary); font-size: 0.8rem; font-weight: 500; display: inline-flex; align-items: center; gap: 0.3rem;">
-    <i class="fas fa-download"></i> Download PDF
-  </a>
-  <a href="https://shyntesy.com"><i class="fas fa-home"></i> To HeartFirst</a>
-  <button id="themeToggle"><i class="fas fa-moon"></i> Dark mode</button>
+  <span class="toolbar-brand">HeartFirst</span>
+  <button class="hamburger-btn" id="hamburgerBtn" aria-label="Open menu" aria-expanded="false">
+    <i class="fas fa-bars"></i>
+  </button>
+  <div class="toolbar-items" id="toolbarItems">
+    <button onclick="window.print()"><i class="fas fa-print"></i> Print / Save as PDF</button>
+    <a href="snapshot.pdf" download style="background: var(--soft-bg); border: 1px solid var(--border-line); border-radius: 30px; padding: 0.4rem 1rem; text-decoration: none; color: var(--text-primary); font-size: 0.8rem; font-weight: 500; display: inline-flex; align-items: center; gap: 0.3rem;">
+      <i class="fas fa-download"></i> Download PDF
+    </a>
+    <a href="https://shyntesy.com"><i class="fas fa-home"></i> To HeartFirst</a>
+    <button id="themeToggle"><i class="fas fa-moon"></i> Dark mode</button>
+  </div>
 </div>
 
 <div class="document">
@@ -480,7 +635,7 @@
       </div>
     </div>
     <div class="flow-bridge">
-      <div class="flow-eyebrow">This tool uses one simple structure</div>
+      <div class="flow-eyebrow">This tool uses one simple process</div>
       <div class="flow-mini">
         <span class="flow-pill">Known or Unknown</span>
         <span class="flow-arrow">→</span>
@@ -498,7 +653,7 @@
     <div class="page-number">1</div>
   </div>
 
-  <!-- PAGE 2 -->
+  <!-- PAGE 2 (corrected – fewer lines to prevent print overflow) -->
   <div class="page">
     <div class="top-rule"></div>
     <div class="eyebrow">Your Snapshot</div>
@@ -525,7 +680,7 @@
         <h3>3. Diagnoses or concerns already raised</h3>
         <p class="prompt"><strong>Question:</strong> What cardiovascular or related conditions have you been told you have?<br>
         <span class="example-text"><em>Example:</em> “High blood pressure”, “Borderline diabetes”</span></p>
-        <div class="known-section"><div class="mini-label">Known</div><div class="lines"><div class="line tight"></div><div class="line tight"></div></div></div>
+        <div class="known-section"><div class="mini-label">Known</div><div class="lines"><div class="line tight"></div></div></div>
         <div class="unknown-section"><div class="mini-label">Unknown</div><div class="lines"><div class="line tight"></div></div></div>
         <div class="mini-label">To discuss</div><div class="lines"><div class="line tight"></div></div>
       </div>
@@ -533,7 +688,7 @@
         <h3>4. What has not been measured or is unclear</h3>
         <p class="prompt"><strong>Question:</strong> Which tests have you not had, or results are missing?<br>
         <span class="example-text"><em>Example:</em> “Lp(a) never tested”, “Don’t know my ApoB”</span></p>
-        <div class="unknown-section"><div class="mini-label">Unknown</div><div class="lines"><div class="line"></div><div class="line"></div></div></div>
+        <div class="unknown-section"><div class="mini-label">Unknown</div><div class="lines"><div class="line"></div></div></div>
         <div class="mini-label">To discuss</div><div class="lines"><div class="line tight"></div><div class="line tight"></div></div>
       </div>
     </div>
@@ -603,9 +758,9 @@
     <div class="box">
       <h3>How to reduce heart attack and stroke risk</h3>
       <ul class="spaced-list">
-        <li><strong>Know your full risk picture</strong>: not just standard cholesterol</li>
+        <li><strong>Know your risk picture</strong>: not just standard cholesterol</li>
         <li><strong>Take the right action</strong>: based on the right questions and answers</li>
-        <li><strong>Measure what matters</strong>: blood pressure, Lp(a), ApoB, LDL-P</li>
+        <li><strong>Measure risks that matter</strong>: blood pressure, Lp(a), ApoB, LDL-P</li>
         <li><strong>Build habits that protect you</strong>: movement, sleep, food, follow‑ups</li>
         <li><strong>Repeat the process</strong>: because risks change over time</li>
       </ul>
@@ -650,6 +805,7 @@
 
 <script>
   (function() {
+    // --- Theme toggle ---
     const toggle = document.getElementById('themeToggle');
     const root = document.documentElement;
     const saved = localStorage.getItem('snapshotTheme') || 'light';
@@ -673,6 +829,37 @@
         } else {
           toggle.innerHTML = '<i class="fas fa-moon"></i> Dark mode';
         }
+      });
+    }
+
+    // --- Hamburger menu toggle ---
+    const hamburgerBtn = document.getElementById('hamburgerBtn');
+    const toolbarItems = document.getElementById('toolbarItems');
+    if (hamburgerBtn && toolbarItems) {
+      hamburgerBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        const isOpen = toolbarItems.classList.toggle('open');
+        hamburgerBtn.setAttribute('aria-expanded', isOpen);
+        hamburgerBtn.innerHTML = isOpen
+          ? '<i class="fas fa-times"></i>'
+          : '<i class="fas fa-bars"></i>';
+      });
+      // Close menu when clicking outside
+      document.addEventListener('click', function(e) {
+        if (!toolbarItems.contains(e.target) && e.target !== hamburgerBtn) {
+          toolbarItems.classList.remove('open');
+          hamburgerBtn.setAttribute('aria-expanded', 'false');
+          hamburgerBtn.innerHTML = '<i class="fas fa-bars"></i>';
+        }
+      });
+      // Close menu after any item is tapped (except theme toggle, which stays open)
+      toolbarItems.querySelectorAll('a, button').forEach(function(el) {
+        el.addEventListener('click', function() {
+          if (el.id === 'themeToggle') return;
+          toolbarItems.classList.remove('open');
+          hamburgerBtn.setAttribute('aria-expanded', 'false');
+          hamburgerBtn.innerHTML = '<i class="fas fa-bars"></i>';
+        });
       });
     }
   })();
